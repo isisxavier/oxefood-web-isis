@@ -2,6 +2,37 @@ import React from "react";
 import InputMask from 'react-input-mask';
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
 
+const options = [
+	{ key: 'AC', value: 'AC', text: 'Acre' },
+  	{ key: 'AL', value: 'AL', text: 'Alagoas' },
+	{ key: 'AP', value: 'AP', text: 'Amapá' },
+	{ key: 'AM', value: 'AM', text: 'Amazonas' },
+	{ key: 'BA', value: 'BA', text: 'Bahia' },
+	{ key: 'CE', value: 'CE', text: 'Ceará' },
+	{ key: 'DF', value: 'DF', text: 'Distrito Federal' },
+	{ key: 'ES', value: 'ES', text: 'Espírito Santo' },
+	{ key: 'GO', value: 'GO', text: 'Goiás' },
+	{ key: 'MA', value: 'MA', text: 'Maranhão' },
+	{ key: 'MT', value: 'MT', text: 'Mato Grosso' },
+	{ key: 'MS', value: 'MS', text: 'Mato Grosso do Sul' },
+	{ key: 'MG', value: 'MG', text: 'Minas Gerais' },
+	{ key: 'PA', value: 'PA', text: 'Pará' },
+	{ key: 'PB', value: 'PB', text: 'Paraíba' },
+	{ key: 'PR', value: 'PR', text: 'Paraná' },
+	{ key: 'PE', value: 'PE', text: 'Pernambuco' },
+	{ key: 'PI', value: 'PI', text: 'Piauí' },
+	{ key: 'RJ', value: 'RJ', text: 'Rio de Janeiro' },
+	{ key: 'RN', value: 'RN', text: 'Rio Grande do Norte' },
+	{ key: 'RS', value: 'RS', text: 'Rio Grande do Sul' },
+	{ key: 'RO', value: 'RO', text: 'Rondônia' },
+	{ key: 'RR', value: 'RR', text: 'Roraima' },
+	{ key: 'SC', value: 'SC', text: 'Santa' },
+	{ key: 'SP', value: 'SP', text: 'São Paulo' },
+	{ key: 'SE', value: 'SE', text: 'Sergipe' },
+	{ key: 'TO', value: 'TO', text: 'Tocantins' },
+  ]
+
+  
 class FormEntregador extends React.Component{
 
     render(){
@@ -54,7 +85,7 @@ class FormEntregador extends React.Component{
                                     <Form.Input
                                         fluid
                                         label='DT Nascimento'
-                                        width={6}
+                                        width={5}
                                     >
                                         <InputMask 
                                             mask="99/99/9999" 
@@ -67,7 +98,7 @@ class FormEntregador extends React.Component{
                                         required
 										fluid
 										label='Fone Celular'
-                                        width={6}>
+                                        width={7}>
 										<InputMask 
 										mask="(99) 9999.9999" /> 
 									</Form.Input>
@@ -75,7 +106,7 @@ class FormEntregador extends React.Component{
                                     <Form.Input
 										fluid
 										label='Fone Fixo'
-                                        width={6}>
+                                        width={7}>
 										<InputMask 
 										mask="(99) 9999.9999" /> 
 									</Form.Input>
@@ -83,14 +114,14 @@ class FormEntregador extends React.Component{
                                     <Form.Input
 										fluid
 										label='QTD Entregas Realizadas'
-                                        width={6}
+                                        width={5}
                                         type="number">
 									</Form.Input>
 
 									<Form.Input
 										fluid
 										label='Valor Por Frete'
-                                        width={6}
+                                        width={5}
 										type="number"> 
 									</Form.Input>
 
@@ -100,15 +131,15 @@ class FormEntregador extends React.Component{
 
 									<Form.Input
 										fluid
-                                        width={11}
+                                        width={16}
 										label='Rua'
-										maxLength="100"
+										maxLength="190"
 									/>
 
 									<Form.Input
 										fluid
 										label='Número'
-                                        width={6}
+                                        width={4}
 										type="number"> 
 									</Form.Input>
 
@@ -120,25 +151,58 @@ class FormEntregador extends React.Component{
 										fluid
                                         width={11}
 										label='Bairro'
-										maxLength="100"
+										maxLength="190"
 									/>
 
                                     <Form.Input
 										fluid
                                         width={11}
 										label='Cidade'
-										maxLength="100"
+										maxLength="190"
 									/>
 
 									<Form.Input
 										fluid
 										label='CEP'
-                                        width={6}> 
+                                        width={3}> 
                                         <InputMask 
 										mask="99.999-999"/> 
 									</Form.Input>
 
 								</Form.Group>
+
+								<Form.Group >
+
+									<Form.Input
+										fluid
+                                        width={16}
+										label='UF'
+										maxLength="190"
+									/>
+								</Form.Group>
+
+								<Form.Group>
+									
+								<Form.Select
+									fluid
+									label='UF'
+									width={16}
+									options={options}
+									placeholder='Selecione'
+								/>
+								</Form.Group>
+
+								<Form.Group >
+
+									<Form.Input
+										fluid
+                                        width={16}
+										label='Complemento'
+										maxLength="190"
+									/>
+								</Form.Group>
+
+								
 
 								<Form.Group widths='equal' style={{marginTop: '4%'}}  className='form--empresa-salvar'>
 
