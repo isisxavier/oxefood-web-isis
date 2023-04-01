@@ -1,6 +1,6 @@
 import React from "react";
 import InputMask from 'react-input-mask';
-import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
+import { Button, Container, Divider, Form, Icon, Radio } from 'semantic-ui-react';
 
 const options = [
 	{ key: 'AC', value: 'AC', text: 'Acre' },
@@ -34,8 +34,12 @@ const options = [
 
   
 class FormEntregador extends React.Component{
+	state = {}
 
+	handleChange = (e, { value }) => this.setState({ value })
+	
     render(){
+		const { value } = this.state
         return(
             <div>
 
@@ -202,6 +206,25 @@ class FormEntregador extends React.Component{
 									/>
 								</Form.Group>
 
+
+								<Form.Group inline>
+									<label>Ativo:</label>
+									<Form.Field
+										control={Radio}
+										label='Sim'
+										value='1'
+										checked={value === '1'}
+										onChange={this.handleChange}
+									/>
+									<Form.Field
+										control={Radio}
+										label='Não'
+										value='2'
+										checked={value === '2'}
+										onChange={this.handleChange}
+									/>
+									
+									</Form.Group>
 								
 
 								<Form.Group widths='equal' style={{marginTop: '4%'}}  className='form--empresa-salvar'>
