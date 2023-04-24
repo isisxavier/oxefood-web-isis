@@ -175,16 +175,6 @@ class FormEntregador extends React.Component{
 
 								</Form.Group>
 
-								<Form.Group >
-
-									<Form.Input
-										fluid
-                                        width={16}
-										label='UF'
-										maxLength="190"
-									/>
-								</Form.Group>
-
 								<Form.Group>
 									
 								<Form.Select
