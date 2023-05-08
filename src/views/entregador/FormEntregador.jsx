@@ -76,6 +76,8 @@ class FormEntregador extends React.Component{
 			enderecoComplemento: this.state.enderecoComplemento,
 			ativo: this.state.ativo,
 		}
+
+		console.log(entregadorRequest)
 	
 		axios.post("http://localhost:8082/api/entregador", entregadorRequest)
 		.then((response) => {
@@ -86,10 +88,7 @@ class FormEntregador extends React.Component{
 		})
 	}
 
-	// handleChange = (e, { value }) => this.setState({ value })
-	
     render(){
-		const { value } = this.state
         return(
             <div>
 
@@ -162,7 +161,7 @@ class FormEntregador extends React.Component{
 										label='Fone Celular'
                                         width={7}>
 										<InputMask 
-										mask="(99) 9999.9999" 
+										mask="(99) 9999-9999" 
 										value={this.state.foneCelular}
 										onChange={e => this.setState({foneCelular: e.target.value})}/> 
 									</Form.Input>
@@ -172,7 +171,7 @@ class FormEntregador extends React.Component{
 										label='Fone Fixo'
                                         width={7}>
 										<InputMask 
-										mask="(99) 9999.9999" 
+										mask="(99) 9999-9999" 
 										value={this.state.foneFixo}
 										onChange={e => this.setState({foneFixo: e.target.value})}/> 
 									</Form.Input>
@@ -181,7 +180,6 @@ class FormEntregador extends React.Component{
 										fluid
 										label='QTD Entregas Realizadas'
                                         width={5}
-                                        // type="number"
 										value={this.state.qtdEntregasRealizadas}
 										onChange={e => this.setState({qtdEntregasRealizadas: e.target.value})}>
 									</Form.Input>
@@ -190,7 +188,6 @@ class FormEntregador extends React.Component{
 										fluid
 										label='Valor Por Frete'
                                         width={5}
-										// type="number"
 										value={this.state.valorFrete}
 										onChange={e => this.setState({valorFrete: e.target.value})}> 
 									</Form.Input>
@@ -212,7 +209,6 @@ class FormEntregador extends React.Component{
 										fluid
 										label='Número'
                                         width={4}
-										// type="number"
 										value={this.state.enderecoNumero}
 										onChange={e => this.setState({enderecoNumero: e.target.value})}> 
 									</Form.Input>
@@ -260,7 +256,9 @@ class FormEntregador extends React.Component{
 									options={options}
 									placeholder='Selecione'
 									value={this.state.enderecoUf}
-									onChange={e => this.setState({enderecoUf: e.target.value})}
+									// onChange={e => this.setState({enderecoUf: e.target.value})}
+
+									onChange={(e, {value}) => this.setState({enderecoUf: value})}
 								/>
 								</Form.Group>
 
@@ -292,7 +290,7 @@ class FormEntregador extends React.Component{
 										label='Não'
 										checked={!this.state.ativo}
 										value={this.state.ativo}
-										onChange={e => this.setState({ativo:false})}
+										onChange={(e) => this.setState({ativo:false})}
 									/>
 									
 									</Form.Group>
