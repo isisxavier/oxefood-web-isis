@@ -1,43 +1,75 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InputMask from 'react-input-mask';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
 
-class FormCliente extends React.Component{
+export default function FormCliente (){
+	const { state } = useLocation();
 
-	state = {
+	const [idCliente, setIdCliente] = useState();
+	const [nome, setNome] = useState();
+	const [cpf, setCpf] = useState();
+	const [dataNascimento, setDataNascimento] = useState();
+	const [foneCelular, setFoneCelular] = useState();
+	const [foneFixo, setFoneFixo] = useState();
 
-		nome: null,
-		cpf: null,
-		dataNascimento: null,
-		foneCelular: null,
-		foneFixo: null
-	}
+	useEffect(() => {
 
-	salvar = () => {
+
+		if (state != null && state.id != null) {
+			axios.get("http://localhost:8082/api/cliente/" + state.id)
+			.then((response) => {
+					setIdCliente(response.data.id)
+					setNome(response.data.nome)
+					setCpf(response.data.cpf)
+					setDataNascimento(formatarData(response.data.dataNascimento))
+					setFoneCelular(response.data.foneCelular)
+					setFoneFixo(response.data.foneFixo)
+			})
+		}
+	}, [state])
+
+	function formatarData(dataParam) {
+
+        if (dataParam == null || dataParam == '') {
+            return ''
+        }
+        
+        let dia = dataParam.substr(8,2);
+        let mes = dataParam.substr(5,2);
+        let ano = dataParam.substr(0,4);
+        let dataFormatada = dia + '/' + mes + '/' + ano;
+
+        return dataFormatada
+    }
+
+	function salvar () {
 
 		let clienteRequest = {
 
-			nome: this.state.nome,
-			cpf: this.state.cpf,
-			dataNascimento: this.state.dataNascimento,
-			foneCelular: this.state.foneCelular,
-			foneFixo: this.state.foneFixo
+			nome: nome,
+			cpf: cpf,
+			dataNascimento: dataNascimento,
+			foneCelular: foneCelular,
+			foneFixo: foneFixo
 		}
 	
-		axios.post("http://localhost:8082/api/cliente", clienteRequest)
-		.then((response) => {
-			console.log('Cliente cadastrado com sucesso.')
-		})
-		.catch((error) => {
-			console.log('Erro ao incluir o um cliente.')
-		})
+		if (idCliente != null) { //Alteração:
+			axios.put("http://localhost:8082/api/cliente/" + idCliente, clienteRequest)
+			.then((response) => { console.log('Cliente alterado com sucesso.') })
+			.catch((error) => { console.log('Erro ao alter um cliente.') })
+		} else { //Cadastro:
+			axios.post("http://localhost:8082/api/cliente/", clienteRequest)
+			.then((response) => { console.log('Cliente cadastrado com sucesso.') })
+			.catch((error) => { console.log('Erro ao incluir o cliente.') })
+		}
+ 
 	}
 
+	
  
 
-    render(){
         return(
             <div>
 
@@ -45,7 +77,13 @@ class FormCliente extends React.Component{
 
                     <Container textAlign='justified' >
 
-                        <h2> <span style={{color: 'darkgray'}}> Cliente &nbsp;<Icon name='angle double right' size="small" /> </span> Cadastro </h2>
+					{ idCliente === undefined &&
+						<h2> <span style={{color: 'darkgray'}}> Cliente &nbsp;<Icon name='angle double right' size="small" /> </span> Cadastro</h2>
+					}
+					{ idCliente != undefined &&
+						<h2> <span style={{color: 'darkgray'}}> Cliente &nbsp;<Icon name='angle double right' size="small" /> </span> Alteração</h2>
+					}
+
 
                         <Divider />
 
@@ -60,8 +98,8 @@ class FormCliente extends React.Component{
 										fluid
 										label='Nome'
 										maxLength="100"
-										value={this.state.nome}
-										onChange={e => this.setState({nome: e.target.value})}
+										value={nome}
+										onChange={e => setNome(e.target.value)}
 									/>
 
 									<Form.Input
@@ -69,8 +107,8 @@ class FormCliente extends React.Component{
 										label='CPF'>
 										<InputMask 
 										mask="999.999.999-99" 
-										value={this.state.cpf}
-										onChange={e => this.setState({cpf: e.target.value})}/>
+										value={cpf}
+										onChange={e => setCpf(e.target.value)}/>
 									</Form.Input>
 
 								</Form.Group>
@@ -83,8 +121,8 @@ class FormCliente extends React.Component{
                                         width={6}>
 										<InputMask 
 										mask="(99) 99999.9999" 
-										value={this.state.foneCelular}
-										onChange={e => this.setState({foneCelular: e.target.value})}/> 
+										value={foneCelular}
+										onChange={e => setFoneCelular(e.target.value)}/> 
 									</Form.Input>
 
 									<Form.Input
@@ -93,8 +131,8 @@ class FormCliente extends React.Component{
                                         width={6}>
 										<InputMask 
 										mask="(99) 9999.9999" 
-										value={this.state.foneFixo}
-										onChange={e => this.setState({foneFixo: e.target.value})}/> 
+										value={foneFixo}
+										onChange={e => setFoneFixo(e.target.value)}/> 
 									</Form.Input>
 
                                     <Form.Input
@@ -106,8 +144,8 @@ class FormCliente extends React.Component{
                                             mask="99/99/9999" 
                                             maskChar={null}
                                             placeholder="Ex: 20/03/1985"
-											value={this.state.dataNascimento}
-											onChange={e => this.setState({dataNascimento: e.target.value})}
+											value={dataNascimento}
+											onChange={e => setDataNascimento(e.target.value)}
                                         /> 
                                     </Form.Input>
 
@@ -122,7 +160,6 @@ class FormCliente extends React.Component{
 										icon
 										labelPosition='left'
 										color='orange'
-										onClick={this.listar}
 										>
 										<Icon name='reply' />
 										<Link to={'/list-cliente'}>Voltar</Link>
@@ -137,7 +174,7 @@ class FormCliente extends React.Component{
 											labelPosition='left'
 											color='blue'
 											floated='right'
-											onClick={this.salvar}
+											onClick={() => salvar()}
 										>
 											<Icon name='save' />
 											Salvar
@@ -153,7 +190,5 @@ class FormCliente extends React.Component{
                 </div>
 			</div>
 		)
-	}
 }
 
-export default FormCliente;

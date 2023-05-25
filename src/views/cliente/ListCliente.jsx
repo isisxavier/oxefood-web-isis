@@ -95,14 +95,16 @@ formatarData = (dataParam) => {
                                       <Table.Cell>{cliente.foneFixo}</Table.Cell>
                                       <Table.Cell textAlign='center'>
                                          
-                                          <Button
-                                              inverted
-                                              circular
-                                              icon='edit'
-                                              color='blue'
-                                              itle='Clique aqui para editar os dados deste cliente' /> &nbsp;
+                                      <Button
+                                        inverted
+                                        circular
+                                        color='blue'
+                                        title='Clique aqui para editar os dados deste cliente'
+                                        icon>
+                                            <Link to="/form-cliente" state={{id: cliente.id}} style={{color: 'blue'}}> <Icon name='edit' /> </Link>
+                                    </Button> &nbsp;
 
-<Button
+                                            <Button
                                                    inverted
                                                    circular
                                                    icon='trash'
