@@ -97,12 +97,14 @@ formatarData = (dataParam) => {
                                       <Table.Cell>{entregador.qtdEntregasRealizadas}</Table.Cell>
                                       <Table.Cell textAlign='center'>
                                          
-                                          <Button
-                                              inverted
-                                              circular
-                                              icon='edit'
-                                              color='blue'
-                                              itle='Clique aqui para editar os dados deste entregador' /> &nbsp;
+                                      <Button
+                                        inverted
+                                        circular
+                                        color='blue'
+                                        title='Clique aqui para editar os dados deste entregador'
+                                        icon>
+                                            <Link to="/form-entregador" state={{id: entregador.id}} style={{color: 'blue'}}> <Icon name='edit' /> </Link>
+                                    </Button> &nbsp;
 
                                             <Button
                                                    inverted

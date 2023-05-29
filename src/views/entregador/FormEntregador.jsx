@@ -1,6 +1,7 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InputMask from 'react-input-mask';
+import { Link, useLocation } from "react-router-dom";
 import { Button, Container, Divider, Form, Icon, Radio } from 'semantic-ui-react';
 
 const options = [
@@ -34,61 +35,88 @@ const options = [
   ]
 
   
-class FormEntregador extends React.Component{
-	state = {
+  export default function FormEntregador (){
 
-		nome: null,
-		cpf: null,
-		rg: null,
-		dataNascimento: null,
-		foneCelular: null,
-		foneFixo: null,
-		qtdEntregasRealizadas: null,
-		valorFrete: null,
-		enderecoRua: null,
-		enderecoNumero: null,
-		enderecoBairro: null,
-		enderecoCidade: null,
-		enderecoCep: null,
-		enderecoUf: null,
-		enderecoComplemento: null,
-		ativo: true,
-	}
+	const { state } = useLocation();
 
-	salvar = () => {
+	const [idEntregador, setIdEntregador] = useState();
+	const [nome, setNome] = useState();
+	const [cpf, setCpf] = useState();
+	const [rg, setRg] = useState();
+	const [dataNascimento,setDataNascimento ] = useState();
+	const [foneCelular,setFoneCelular ] = useState();
+	const [foneFixo, setFoneFixo] = useState();
+	const [qtdEntregasRealizadas, setQtdEntregasRealizadas] = useState();
+	const [valorFrete, setValorFrete] = useState();
+	const [enderecoRua, setEnderecoRua] = useState();
+	const [enderecoNumero, setEnderecoNumero] = useState();
+	const [enderecoBairro, setEnderecoBairro] = useState();
+	const [enderecoCidade, setEnderecoCidade] = useState();
+	const [enderecoCep, setEnderecoCep] = useState();
+	const [enderecoUf, setEnderecoUf] = useState();
+	const [enderecoComplemento, setEnderecoComplemento] = useState();
+	const [ativo, setAtivo] = useState();
+
+	useEffect(() => {
+		if (state != null && state.id != null) {
+			axios.get("http://localhost:8082/api/entregador/" + state.id)
+			.then((response) => {
+				setIdEntregador(response.data.id)
+				setNome(response.data.nome)
+				setCpf(response.data.cpf)
+				setRg(response.data.rg)
+				setDataNascimento(response.data.dataNascimento)
+				setFoneCelular(response.data.foneCelular)
+				setFoneFixo(response.data.foneFixo)
+				setQtdEntregasRealizadas(response.data.qtdEntregasRealizadas)
+				setValorFrete(response.data.valorFrete)
+				setEnderecoRua(response.data.enderecoRua)
+				setEnderecoNumero(response.data.enderecoNumero)
+				setEnderecoBairro(response.data.enderecoBairro)
+				setEnderecoCidade(response.data.enderecoCidade)
+				setEnderecoCep(response.data.enderecoCep)
+				setEnderecoUf(response.data.enderecoUf)
+				setEnderecoComplemento(response.data.enderecoComplemento)
+				setAtivo(response.data.ativo)
+			})
+		}
+	}, [state])
+
+
+	function salvar (){
 
 		let entregadorRequest = {
 
-			nome: this.state.nome,
-			cpf: this.state.cpf,
-			rg: this.state.rg,
-			dataNascimento: this.state.dataNascimento,
-			foneCelular: this.state.foneCelular,
-			foneFixo: this.state.foneFixo,
-			qtdEntregasRealizadas: this.state.qtdEntregasRealizadas,
-			valorFrete: this.state.valorFrete,
-			enderecoRua: this.state.enderecoRua,
-			enderecoNumero: this.state.enderecoNumero,
-			enderecoBairro: this.state.enderecoBairro,
-			enderecoCidade: this.state.enderecoCidade,
-			enderecoCep: this.state.enderecoCep,
-			enderecoUf: this.state.enderecoUf,
-			enderecoComplemento: this.state.enderecoComplemento,
-			ativo: this.state.ativo,
+			nome: nome,
+			cpf: cpf,
+			rg: rg,
+			dataNascimento: dataNascimento,
+			foneCelular: foneCelular,
+			foneFixo: foneFixo,
+			qtdEntregasRealizadas: qtdEntregasRealizadas,
+			valorFrete: valorFrete,
+			enderecoRua: enderecoRua,
+			enderecoNumero: enderecoNumero,
+			enderecoBairro: enderecoBairro,
+			enderecoCidade: enderecoCidade,
+			enderecoCep: enderecoCep,
+			enderecoUf: enderecoUf,
+			enderecoComplemento: enderecoComplemento,
+			ativo: ativo,
 		}
 
-		console.log(entregadorRequest)
-	
-		axios.post("http://localhost:8082/api/entregador", entregadorRequest)
-		.then((response) => {
-			console.log('Entregador cadastrado com sucesso.')
-		})
-		.catch((error) => {
-			console.log('Erro ao incluir entregador.')
-		})
+
+		if (idEntregador != null) { //Alteração:
+			axios.put("http://localhost:8082/api/entregador/" + idEntregador, entregadorRequest)
+			.then((response) => { console.log('Entregador alterado com sucesso.') })
+			.catch((error) => { console.log('Erro ao alterar um entregador.') })
+		} else { //Cadastro:
+			axios.post("http://localhost:8082/api/entregador/", entregadorRequest)
+			.then((response) => { console.log('Entregador cadastrado com sucesso.') })
+			.catch((error) => { console.log('Erro ao incluir o entregador.') })
+		}
 	}
 
-    render(){
         return(
             <div>
 
@@ -96,7 +124,13 @@ class FormEntregador extends React.Component{
 
                     <Container textAlign='justified' >
 
-                        <h2> <span style={{color: 'darkgray'}}> Entregador &nbsp;<Icon name='angle double right' size="small" /> </span> Cadastro </h2>
+					{ idEntregador === undefined &&
+    					<h2> <span style={{color: 'darkgray'}}> Entregador &nbsp;<Icon name='angle double right' size="small" /> </span> Cadastro</h2>
+					}
+					{ idEntregador != undefined &&
+    					<h2> <span style={{color: 'darkgray'}}> Entregador &nbsp;<Icon name='angle double right' size="small" /> </span> Alteração</h2>
+					}
+
 
                         <Divider />
 
@@ -112,8 +146,8 @@ class FormEntregador extends React.Component{
                                         width={11}
 										label='Nome'
 										maxLength="100"
-										value={this.state.nome}
-										onChange={e => this.setState({nome: e.target.value})}
+										value={nome}
+										onChange={e => setNome(e.target.value)}
 									/>
 
 									<Form.Input
@@ -123,8 +157,8 @@ class FormEntregador extends React.Component{
 										label='CPF'>
 										<InputMask 
 										mask="999.999.999-99"
-										value={this.state.cpf}
-										onChange={e => this.setState({cpf: e.target.value})}/> 
+										value={cpf}
+										onChange={e => setCpf(e.target.value)}/> 
 									</Form.Input>
 
                                     <Form.Input
@@ -133,8 +167,8 @@ class FormEntregador extends React.Component{
 										label='RG'>
 										<InputMask 
 										mask="99.999.999-9"
-										value={this.state.rg}
-										onChange={e => this.setState({rg: e.target.value})}/> 
+										value={rg}
+										onChange={e => setRg(e.target.value)}/> 
 									</Form.Input>
 
 								</Form.Group>
@@ -150,8 +184,8 @@ class FormEntregador extends React.Component{
                                             mask="99/99/9999" 
                                             maskChar={null}
                                             placeholder="Ex: 20/03/1985"
-											value={this.state.dataNascimento}
-											onChange={e => this.setState({dataNascimento: e.target.value})}
+											value={dataNascimento}
+											onChange={e => setDataNascimento(e.target.value)}
                                         /> 
                                     </Form.Input>
 
@@ -162,8 +196,8 @@ class FormEntregador extends React.Component{
                                         width={7}>
 										<InputMask 
 										mask="(99) 9999-9999" 
-										value={this.state.foneCelular}
-										onChange={e => this.setState({foneCelular: e.target.value})}/> 
+										value={foneCelular}
+										onChange={e => setFoneCelular(e.target.value)}/> 
 									</Form.Input>
 
                                     <Form.Input
@@ -172,24 +206,24 @@ class FormEntregador extends React.Component{
                                         width={7}>
 										<InputMask 
 										mask="(99) 9999-9999" 
-										value={this.state.foneFixo}
-										onChange={e => this.setState({foneFixo: e.target.value})}/> 
+										value={foneFixo}
+										onChange={e => setFoneFixo(e.target.value)}/> 
 									</Form.Input>
 
                                     <Form.Input
 										fluid
 										label='QTD Entregas Realizadas'
                                         width={5}
-										value={this.state.qtdEntregasRealizadas}
-										onChange={e => this.setState({qtdEntregasRealizadas: e.target.value})}>
+										value={qtdEntregasRealizadas}
+										onChange={e => setQtdEntregasRealizadas(e.target.value)}>
 									</Form.Input>
 
 									<Form.Input
 										fluid
 										label='Valor Por Frete'
                                         width={5}
-										value={this.state.valorFrete}
-										onChange={e => this.setState({valorFrete: e.target.value})}> 
+										value={valorFrete}
+										onChange={e => setValorFrete(e.target.value)}> 
 									</Form.Input>
 
 								</Form.Group>
@@ -201,16 +235,16 @@ class FormEntregador extends React.Component{
                                         width={16}
 										label='Rua'
 										maxLength="190"
-										value={this.state.enderecoRua}
-										onChange={e => this.setState({enderecoRua: e.target.value})}
+										value={enderecoRua}
+										onChange={e => setEnderecoRua(e.target.value)}
 									/>
 
 									<Form.Input
 										fluid
 										label='Número'
                                         width={4}
-										value={this.state.enderecoNumero}
-										onChange={e => this.setState({enderecoNumero: e.target.value})}> 
+										value={enderecoNumero}
+										onChange={e => setEnderecoNumero(e.target.value)}> 
 									</Form.Input>
 
 								</Form.Group>
@@ -222,8 +256,8 @@ class FormEntregador extends React.Component{
                                         width={11}
 										label='Bairro'
 										maxLength="190"
-										value={this.state.enderecoBairro}
-										onChange={e => this.setState({enderecoBairro: e.target.value})}
+										value={enderecoBairro}
+										onChange={e => setEnderecoBairro(e.target.value)}
 									/>
 
                                     <Form.Input
@@ -231,8 +265,8 @@ class FormEntregador extends React.Component{
                                         width={11}
 										label='Cidade'
 										maxLength="190"
-										value={this.state.enderecoCidade}
-										onChange={e => this.setState({enderecoCidade: e.target.value})}
+										value={enderecoCidade}
+										onChange={e => setEnderecoCidade(e.target.value)}
 									/>
 
 									<Form.Input
@@ -241,8 +275,8 @@ class FormEntregador extends React.Component{
                                         width={3}> 
                                         <InputMask 
 										mask="99.999-999"
-										value={this.state.enderecoCep}
-										onChange={e => this.setState({enderecoCep: e.target.value})}/> 
+										value={enderecoCep}
+										onChange={e => setEnderecoCep(e.target.value)}/> 
 									</Form.Input>
 
 								</Form.Group>
@@ -255,10 +289,10 @@ class FormEntregador extends React.Component{
 									width={16}
 									options={options}
 									placeholder='Selecione'
-									value={this.state.enderecoUf}
-									// onChange={e => this.setState({enderecoUf: e.target.value})}
+									value={enderecoUf}
+									// onChange={e => setState({enderecoUf: e.target.value})}
 
-									onChange={(e, {value}) => this.setState({enderecoUf: value})}
+									onChange={(e, {value}) => setEnderecoUf(value)}
 								/>
 								</Form.Group>
 
@@ -269,8 +303,8 @@ class FormEntregador extends React.Component{
                                         width={16}
 										label='Complemento'
 										maxLength="190"
-										value={this.state.enderecoComplemento}
-										onChange={e => this.setState({enderecoComplemento: e.target.value})}
+										value={enderecoComplemento}
+										onChange={e => setEnderecoComplemento(e.target.value)}
 									/>
 								</Form.Group>
 
@@ -280,17 +314,17 @@ class FormEntregador extends React.Component{
 									<Form.Field
 										control={Radio}
 										label='Sim'
-										checked={this.state.ativo}
-										value={this.state.ativo}
-										onChange={(e) => {this.setState({ ativo:true });
+										checked={ativo}
+										value={ativo}
+										onChange={(e) => {setAtivo(true);
 										}}
 									/>
 									<Form.Field
 										control={Radio}
 										label='Não'
-										checked={!this.state.ativo}
-										value={this.state.ativo}
-										onChange={(e) => this.setState({ativo:false})}
+										checked={!ativo}
+										value={ativo}
+										onChange={(e) => setAtivo(false)}
 									/>
 									
 									</Form.Group>
@@ -305,10 +339,9 @@ class FormEntregador extends React.Component{
 										icon
 										labelPosition='left'
 										color='orange'
-										onClick={this.listar}
 										>
 										<Icon name='reply' />
-										Voltar
+										<Link to={'/list-entregador'}>Voltar</Link>
 									</Button>
 
 									<Container textAlign='right'>
@@ -320,7 +353,7 @@ class FormEntregador extends React.Component{
 											labelPosition='left'
 											color='blue'
 											floated='right'
-											onClick={this.salvar}
+											onClick={() => salvar()}
 										>
 											<Icon name='save' />
 											Salvar
@@ -336,7 +369,5 @@ class FormEntregador extends React.Component{
                 </div>
 			</div>
 		)
-	}
+	
 }
-
-export default FormEntregador;
