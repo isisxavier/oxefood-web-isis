@@ -103,6 +103,7 @@ class ListProduto extends React.Component{
                           <Table.Header>
                               <Table.Row>
                                   <Table.HeaderCell>codigo</Table.HeaderCell>
+                                  <Table.HeaderCell>categoria</Table.HeaderCell>
                                   <Table.HeaderCell>titulo</Table.HeaderCell>
                                   <Table.HeaderCell>descricao</Table.HeaderCell>
                                   <Table.HeaderCell>valorUnitario</Table.HeaderCell>
@@ -116,8 +117,9 @@ class ListProduto extends React.Component{
 
                               { this.state.listaProdutos.map(produto => (
 
-                                  <Table.Row>
+                                  <Table.Row key={produto.id}>
                                       <Table.Cell>{produto.codigo}</Table.Cell>
+                                      <Table.Cell>{produto.categoria.descricao}</Table.Cell>
                                       <Table.Cell>{produto.titulo}</Table.Cell>
                                       <Table.Cell>{produto.descricao}</Table.Cell>
                                       <Table.Cell>{produto.valorUnitario}</Table.Cell>
