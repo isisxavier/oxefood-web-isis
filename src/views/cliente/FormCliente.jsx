@@ -13,6 +13,13 @@ export default function FormCliente (){
 	const [dataNascimento, setDataNascimento] = useState();
 	const [foneCelular, setFoneCelular] = useState();
 	const [foneFixo, setFoneFixo] = useState();
+	const [cep, setCep] = useState("");
+	const [rua, setRua] = useState("");
+	const [numero, setNumero] = useState("");
+	const [bairro, setBairro] = useState("");
+	const [cidade, setCidade] = useState("");
+	const [estado, setEstado] = useState("");
+	const [complemento, setComplemento] = useState("");
 
 	useEffect(() => {
 
@@ -26,6 +33,14 @@ export default function FormCliente (){
 					setDataNascimento(formatarData(response.data.dataNascimento))
 					setFoneCelular(response.data.foneCelular)
 					setFoneFixo(response.data.foneFixo)
+					setCep(response.data.cep)
+					setRua(response.data.rua)
+					setNumero(response.data.numero)
+					setBairro(response.data.bairro)
+					setCidade(response.data.cidade)
+					setEstado(response.data.estado)
+					setComplemento(response.data.complemento)
+
 			})
 		}
 	}, [state])
@@ -149,6 +164,89 @@ export default function FormCliente (){
                                         /> 
                                     </Form.Input>
 
+								</Form.Group>
+
+								<Form.Group>
+
+									<Form.Input
+										required
+										fluid
+										label='Cidade'
+										width={6}
+										maxLength="100"
+										value={cidade}
+										onChange={e => setCidade(e.target.value)}
+									/>
+
+									<Form.Input
+										required
+										fluid
+										label='Rua'
+										width={6}
+										maxLength="100"
+										value={rua}
+										onChange={e => setRua(e.target.value)}
+									/>
+
+									<Form.Input
+										required
+										fluid
+										label='Bairro'
+										width={6}
+										maxLength="100"
+										value={bairro}
+										onChange={e => setBairro(e.target.value)}
+									/>
+
+								</Form.Group>
+
+								<Form.Group>
+
+									<Form.Input
+										required
+										fluid
+										label='Estado'
+										width={8}
+										maxLength="100"
+										value={estado}
+										onChange={e => setEstado(e.target.value)}
+									/>
+
+									<Form.Input
+										required
+										fluid
+										label='Número'
+										width={8}
+										maxLength="100"
+										value={numero}
+										onChange={e => setNumero(e.target.value)}
+									/>
+
+									<Form.Input
+										required
+										fluid
+										label='CEP'
+                                        width={3}> 
+                                        <InputMask 
+										mask="99.999-999"
+										value={cep}
+										onChange={e => setCep(e.target.value)}/>
+									</Form.Input>
+
+									
+
+								</Form.Group>
+
+								<Form.Group >
+
+									<Form.Input
+										fluid
+                                        width={16}
+										label='Complemento'
+										maxLength="190"
+										value={complemento}
+										onChange={e => setComplemento(e.target.value)}
+									/>
 								</Form.Group>
 
 								<Form.Group widths='equal' style={{marginTop: '4%'}}  className='form--empresa-salvar'>
