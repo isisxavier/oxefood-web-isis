@@ -20,6 +20,9 @@ export default function FormCliente (){
 	const [cidade, setCidade] = useState("");
 	const [estado, setEstado] = useState("");
 	const [complemento, setComplemento] = useState("");
+	const [enderecos, setEnderecos] = useState([]);
+	const [openModal, setOpenModal] = useState(false);
+	const [idRemover, setIdRemover] = useState();
 
 	useEffect(() => {
 
@@ -33,13 +36,7 @@ export default function FormCliente (){
 					setDataNascimento(formatarData(response.data.dataNascimento))
 					setFoneCelular(response.data.foneCelular)
 					setFoneFixo(response.data.foneFixo)
-					setCep(response.data.cep)
-					setRua(response.data.rua)
-					setNumero(response.data.numero)
-					setBairro(response.data.bairro)
-					setCidade(response.data.cidade)
-					setEstado(response.data.estado)
-					setComplemento(response.data.complemento)
+					setEnderecos(response.data.enderecos)
 
 			})
 		}
@@ -70,16 +67,68 @@ export default function FormCliente (){
 			foneFixo: foneFixo
 		}
 	
-		if (idCliente != null) { //Alteração:
+		if (idCliente != null) {
 			axios.put("http://localhost:8082/api/cliente/" + idCliente, clienteRequest)
 			.then((response) => { console.log('Cliente alterado com sucesso.') })
 			.catch((error) => { console.log('Erro ao alter um cliente.') })
-		} else { //Cadastro:
+		} else {
 			axios.post("http://localhost:8082/api/cliente/", clienteRequest)
 			.then((response) => { console.log('Cliente cadastrado com sucesso.') })
 			.catch((error) => { console.log('Erro ao incluir o cliente.') })
 		}
  
+	}
+
+	async function gravarEndereco() {
+		let EnderecoRequest = {
+			rua: rua,
+			numero: numero,
+			bairro: bairro,
+			cep: cep,
+			cidade: cidade,
+			estado: estado,
+			complemento: complemento
+		}
+
+		if(!EnderecoRequest.rua || !EnderecoRequest.numero || !EnderecoRequest.bairro || !EnderecoRequest.cidade || !EnderecoRequest.estado || !EnderecoRequest.cep){
+			alert("Preencha os campos Obrigatórios do Endereço!");
+			return;
+		}
+
+		await axios.post("http://localhost:8082/api/cliente/endereco/" + idCliente, EnderecoRequest)
+			.then(async(response) => {
+				alert("Endereço adicionado");
+				setCep("");
+				setRua("");
+				setBairro("");
+				setCidade("");
+				setEstado("")
+				setNumero("");
+				setComplemento("");
+				await axios.get("http://localhost:8082/api/cliente/" + idCliente)
+					.then(response => {
+						setEnderecos(response.data.enderecos)
+					})
+			}).catch(e => alert("Ocorreu um erro"))
+	}
+
+
+	function confirmarRemover(id) {
+		setOpenModal(true);
+		setIdRemover(id);
+	}
+
+	async function remover() {
+		await axios.delete("http://localhost:8082/api/cliente/endereco/" + idRemover)
+			.then(async (response) => {
+				setOpenModal(false)
+				await axios.get("http://localhost:8082/api/cliente/" + idCliente)
+					.then(response => {
+						setEnderecos(response.data.enderecos)
+					}).catch(error => {
+						alert("Falha ao excluir registro!")
+					})
+			});
 	}
 
 	
