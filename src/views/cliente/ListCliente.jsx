@@ -7,60 +7,60 @@ class ListCliente extends React.Component{
 
    state = {
 
-    openModal: false,
-    idRemover: null,
-    listaClientes: []
+        openModal: false,
+        idRemover: null,
+        listaClientes: []
       
    }
-
    confirmaRemover = (id) => {
 
-    this.setState({
-        openModal: true,
-        idRemover: id
-         })  
-    }
-
-    setOpenModal = (val) => {
-
         this.setState({
-            openModal: val
+            openModal: true,
+            idRemover: id
         })
-   
-    };
+   }
 
-    remover = async () => {
+   setOpenModal = (val) => {
 
-        await axios.delete("http://localhost:8082/api/cliente/" + this.state.idRemover)
+    this.setState({
+        openModal: val
+    })
+
+};
+
+
+   remover = async () => {
+
+    await axios.delete("http://localhost:8082/api/cliente/" + this.state.idRemover)
+    .then((response) => {
+
+        this.setState({ openModal: false })
+        console.log('Cliente removido com sucesso.')
+
+        axios.get("http://localhost:8082/api/cliente/")
         .then((response) => {
-   
-            this.setState({ openModal: false })
-            console.log('Cliente removido com sucesso.')
-   
-            axios.get("http://localhost:8082/api/cliente/")
-            .then((response) => {
-           
-                this.setState({
-                    listaClientes: response.data
-                })
+       
+            this.setState({
+                listaClientes: response.data
             })
         })
-        .catch((error) => {
-            this.setState({  openModal: false })
-            console.log('Erro ao remover um cliente.')
-        })
- };
- 
-    
+    })
+    .catch((error) => {
+        this.setState({  openModal: false })
+        console.log('Erro ao remover um cliente.')
+    })
+};
+
 
    componentDidMount = () => {
       
        this.carregarLista();
       
    }
+
    carregarLista = () => {
 
-    axios.get("http://localhost:8082/api/cliente/")
+    axios.get("http://localhost:8082/api/cliente")
     .then((response) => {
        
         this.setState({
@@ -84,6 +84,8 @@ formatarData = (dataParam) => {
      return dataFormatada
  };
 
+
+  
  render(){
     return(
         <div>
@@ -109,7 +111,7 @@ formatarData = (dataParam) => {
                             <Icon name='clipboard outline' />
                             <Link to={'/form-cliente'}>Novo</Link>
                         </Button>
- 
+                     
                         <br/><br/><br/>
                       
                       <Table color='orange' sortable celled>
@@ -137,25 +139,26 @@ formatarData = (dataParam) => {
                                       <Table.Cell>{cliente.foneFixo}</Table.Cell>
                                       <Table.Cell textAlign='center'>
                                          
-                                      <Button
-                                        inverted
-                                        circular
-                                        color='blue'
-                                        title='Clique aqui para editar os dados deste cliente'
-                                        icon>
-                                            <Link to="/form-cliente" state={{id: cliente.id}} style={{color: 'blue'}}> <Icon name='edit' /> </Link>
-                                    </Button> &nbsp;
+                                  <Button
+                                    inverted
+                                    circular
+                                    color='blue'
+                                    title='Clique aqui para editar os dados deste cliente'
+                                    icon>
+                                     <Link to="/form-cliente" state={{id: cliente.id}} style={{color: 'blue'}}> <Icon name='edit' /> </Link> 
+                                </Button> &nbsp;
 
+                                
                                     <Button
-                                        inverted
-                                        circular
-                                        color='red'
-                                        title='Clique aqui para remover este cliente'
-                                        icon
-                                        onClick={e => this.confirmaRemover(cliente.id)}>
-                                        <Icon name='trash' />
-                                        </Button>
+                                                   inverted
+                                                   circular
+                                                   
+                                                   color='red'
+                                                   title='Clique aqui para remover este cliente'
+                                                   onClick={e => this.confirmaRemover(cliente.id)}>
+                                                    <Icon name='trash'/>
 
+                                                    </Button>
 
                                            </Table.Cell>
                                        </Table.Row>
@@ -166,7 +169,7 @@ formatarData = (dataParam) => {
                        </div>
                    </Container>
                </div>
-                        <Modal
+         <Modal
                    			basic
                    			onClose={() => this.setOpenModal(false)}
                    			onOpen={() => this.setOpenModal(true)}
@@ -186,10 +189,13 @@ formatarData = (dataParam) => {
                    			</Modal.Actions>
                			</Modal>
 
+
+
            </div>
+            
+
        )
    }
 }
 
 export default ListCliente;
-
